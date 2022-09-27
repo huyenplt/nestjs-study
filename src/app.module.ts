@@ -12,7 +12,13 @@ import { User } from './users/entities/user.entity';
     UsersModule,
     TasksModule, 
     AuthModule,
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'db',
+      entities: ['dist/src/**/*.entity.js'],
+      synchronize: true,
+      migrations: ["dist/src/migrations/*.js"],
+  }),
     TypeOrmModule.forFeature([User])
   ],
   controllers: [AppController],

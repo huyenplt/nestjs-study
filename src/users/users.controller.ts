@@ -12,7 +12,7 @@ export class UsersController {
     @ApiOkResponse({ type: User, isArray: true })
     @ApiQuery({name: 'name', required: false})
     @Get()
-    getUsers(@Query('name') name: string): User[] {
+    async getUsers(@Query('name') name: string): Promise<User[]> {
         return this.usersService.findAll(name);
     }
 
@@ -31,7 +31,7 @@ export class UsersController {
 
     @ApiCreatedResponse({ type: User })
     @Post() 
-    createUser(@Body() body: CreateUserDto): User {
+    async createUser(@Body() body: CreateUserDto): Promise<User> {
         return this.usersService.createUser(body);
     }
 }

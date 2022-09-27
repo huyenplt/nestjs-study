@@ -15,13 +15,14 @@ export class AppController {
     return this.authService.login(req.user);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('protected')
-  async getHello(): Promise<User[]> {
-    return this.appService.getAll();
-  }
-
-  // getHello(@Request() req): string {
-  //   return req.user;
+  // async getHello(): Promise<User[]> {
+  //   // return this.appService.createUser('Test', 'test');
+  //   return this.appService.getAll();
   // }
+
+  getHello(@Request() req): string {
+    return req.user;
+  }
 }

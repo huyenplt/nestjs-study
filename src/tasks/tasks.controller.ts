@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, UseGuards, Request, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -10,14 +10,14 @@ export class TasksController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  create(@Body() createTaskDto: CreateTaskDto, @Request() req) {
+    return this.tasksService.create(createTaskDto, req.user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll(): Task[] {
-    return this.tasksService.findAll();
+  async findAll(@Request() req): Promise<Task[]> {
+    return this.tasksService.findAll(req.user);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -26,15 +26,15 @@ export class TasksController {
     return this.tasksService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: CreateTaskDto) {
-    return this.tasksService.update(id, updateTaskDto);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateTaskDto: CreateTaskDto) {
+  //   return this.tasksService.update(id, updateTaskDto);
+  // }
 
-  @UseGuards(JwtAuthGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string): string {
-    return this.tasksService.remove(id);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Delete(':id')
+  // remove(@Param('id') id: string): string {
+  //   return this.tasksService.remove(id);
+  // }
 }
