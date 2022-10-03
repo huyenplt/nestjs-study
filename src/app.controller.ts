@@ -14,15 +14,4 @@ export class AppController {
   login(@Request() req): any {
     return this.authService.login(req.user);
   }
-
-  // @UseGuards(JwtAuthGuard)
-  @Get('protected')
-  // async getHello(): Promise<User[]> {
-  //   // return this.appService.createUser('Test', 'test');
-  //   return this.appService.getAll();
-  // }
-
-  getHello(@Request() req): string {
-    return req.user;
-  }
 }
