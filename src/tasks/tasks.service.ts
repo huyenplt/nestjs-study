@@ -9,27 +9,10 @@ import { User } from 'src/users/entities/user.entity';
 @Injectable()
 export class TasksService {
   constructor(@InjectRepository(Task) private tasksRespository: Repository<Task>) {}
-  // tasks: Task[] = [
-    // {
-    //   id: 'asd1',
-    //   title: 'Task One',
-    //   description: 'Task One Desc'
-    // },
-    // {
-    //   id: 'qwe2',
-    //   title: 'Task Two',
-    //   description: 'Task Two Desc'
-    // },
-    // {
-    //   id: 'zxc3',
-    //   title: 'Task Three',
-    //   description: 'Task Three Desc'
-    // }
-  // ];
 
   create(createTaskDto: CreateTaskDto, user: User): Promise<Task> {
     const newTask = this.tasksRespository.create({ 
-      id: Math.floor((Math.random()*10000)+1).toString(), 
+      id: Math.floor((Math.random()*10000)+1), 
       ...createTaskDto, 
       owner: user
     });
@@ -44,35 +27,30 @@ export class TasksService {
     })
   }
 
-  async findOne(id: string): Promise<Task> {
-    try {
+  async findOne(id: number): Promise<Task> {
       const task = await this.tasksRespository.findOneOrFail({ where: { id: id } });
+
+      if (!task) throw new NotFoundException()
+      
       return task;
-    }
-    catch (err) {
-      throw err;
+    
+  }
+
+  async update(id: number, updateTaskDto: CreateTaskDto): Promise<Task> {
+    const task = await this.findOne(id);
+
+    if (task) {
+      const newTask = {...task, ...updateTaskDto};
+
+      return this.tasksRespository.save(newTask);
     }
   }
 
-  // update(id: string, updateTaskDto: CreateTaskDto) {
-  //   const taskIdx = this.tasks.findIndex(t => t.id === id);
+  async remove(id: number): Promise<Task> {
+    const task = await this.findOne(id);
 
-  //   this.tasks[taskIdx] = { ...this.tasks[taskIdx], ...updateTaskDto }
-
-  //   return { ...this.tasks[taskIdx] }
-  // }
-
-  // remove(id: string) {
-  //   const task = this.tasks.find(t => t.id === id);
-
-  //   if (!task) {
-  //     throw new NotFoundException();
-  //   }
-
-  //   const taskIdx = this.tasks.indexOf(task);
-
-  //   this.tasks.splice(taskIdx, 1);
-
-  //   return `task ${id} has been deleted`
-  // }
+    if (task) {
+      return this.tasksRespository.remove(task);
+    }
+  }
 }
