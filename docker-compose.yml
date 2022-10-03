@@ -14,9 +14,15 @@ services:
     ports:
       - 3000:3000
 
-  sqlite:
-    image: nouchka/sqlite3:latest
-    volumes:
-      - ./database:/var/lib/sqlite/data
+  db:
+    image: mysql
+    restart: always
+    container_name: nest-mysql
+    environment:
+      MYSQL_DATABASE: nest
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - 5432:5432
+      - "3306:3306"
+    volumes:
+      - .mysql-data:/var/lib/mysql
