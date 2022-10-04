@@ -1,5 +1,9 @@
 version: '2.2'
 
+networks:
+  my_network:
+    driver: bridge
+
 services:
   api:
     build:
@@ -7,6 +11,8 @@ services:
       context: .
       # Only will build development stage from our dockerfile
       target: development
+    networks:
+      - my_network
     volumes:
       - .:/usr/src/app
     # Run a command against the development stage of the image
@@ -17,11 +23,12 @@ services:
   db:
     image: mysql
     restart: always
-    container_name: nest-mysql
+    networks:
+      - my_network
     environment:
-      MYSQL_DATABASE: nest
-      MYSQL_USER: root
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASS}
     ports:
       - "3306:3306"
     volumes:
