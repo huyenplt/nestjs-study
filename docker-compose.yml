@@ -22,14 +22,13 @@ services:
 
   db:
     image: mysql
-    restart: always
     networks:
       - my_network
     env_file:
       - .env
     environment:
       MYSQL_DATABASE: ${DATABASE_NAME}
-      MYSQL_USER: ${DATABASE_USER}
+      # MYSQL_USER: ${DATABASE_USER}
       MYSQL_ROOT_PASSWORD: ${DATABASE_PASS}
     ports:
       - "3306:3306"
