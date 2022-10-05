@@ -1,5 +1,9 @@
 version: '2.2'
 
+networks:
+  my_network:
+    driver: bridge
+
 services:
   api:
     build:
@@ -7,9 +11,26 @@ services:
       context: .
       # Only will build development stage from our dockerfile
       target: development
+    networks:
+      - my_network
     volumes:
       - .:/usr/src/app
     # Run a command against the development stage of the image
     command: npm run start:dev
     ports:
       - 3000:3000
+
+  db:
+    image: mysql
+    networks:
+      - my_network
+    env_file:
+      - .env
+    environment:
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      # MYSQL_USER: ${DATABASE_USER}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASS}
+    ports:
+      - "3306:3306"
+    volumes:
+      - .mysql-data:/var/lib/mysql
